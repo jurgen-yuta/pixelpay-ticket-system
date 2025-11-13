@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\Api\TicketController; // ⬅️ DEBE ESTAR ESTA IMPORTACIÓN
+use App\Http\Controllers\Api\TicketController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,11 +14,11 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
-
-// ENDPOINT PARA TICKETS:
-// 1. POST /api/tickets (Creación)
-Route::post('tickets', [TicketController::class, 'store']); 
-
-// 2. GET /api/tickets/{id} (Detalle)
-Route::get('tickets/{id}', [TicketController::class, 'show']);
+Route::post('tickets', [TicketController::class, 'store']);
+Route::get('tickets', [TicketController::class, 'index']); // <<< LISTADO
+Route::put('tickets/{ticket}/status', [TicketController::class, 'updateStatus']); // <<< ACTUALIZAR ESTADO
+Route::get('tickets/{ticket}', [TicketController::class, 'show']);

@@ -17,8 +17,10 @@ return new class extends Migration
             
             // Requerimiento: title (validar que sea requerido) 
             $table->string('title');
+
+            $table->text('description')->nullable(); // <<< NUEVO CAMPO
             
-            // Requerimiento: status (por defecto 'open') 
+            // Requerimiento: status, Definimos los posibles estados (por defecto 'open') 
             $table->enum('status', ['open', 'in_progress', 'closed'])->default('open');
             
             $table->timestamps();
