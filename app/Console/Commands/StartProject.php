@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\File;
 class StartProject extends Command
 {
     protected $signature = 'start';
-    protected $description = 'Configura el proyecto (SQLite, migraciones) e inicia el servidor de desarrollo.';
+    protected $description = 'Configura el proyecto (SQLite, migraciones) e inicia el servidor de desarrollo, abriendo la vista frontend.';
 
     public function handle()
     {
@@ -57,13 +57,47 @@ class StartProject extends Command
 
         // 3. Ejecución de migraciones/seeders (Ahora con SQLite)
         $this->info('Ejecutando migraciones y seeders...');
-        Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true], $this->output); // <<< CORRECCIÓN APLICADA AQUÍ LA LOGICAla PARA CREAE EL ARCHIVO SQLite SI NO EXISTE
+        Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true], $this->output);
         $this->info('Configuración de base de datos finalizada.');
 
         // 4. Inicio del Servidor
+        
+        // ***********************************************
+        // ABRIR EL NAVEGADOR EN /dashboard
+        // ***********************************************
+        $url = 'http://127.0.0.1:8000/dashboard'; // <--- LA NUEVA RUTA
+        
+        $this->info("Abriendo el frontend en: {$url}");
+        $this->openBrowser($url);
+        
+        // Pausa breve para asegurar que el navegador tenga tiempo de lanzar la URL
+        // antes de que la consola sea bloqueada por 'php artisan serve'.
+        usleep(500000); // 0.5 segundos
+        // ***********************************************
+
         $this->warn('Iniciando servidor de desarrollo en http://127.0.0.1:8000...');
         passthru('php artisan serve');
         
         return Command::SUCCESS;
+    }
+
+    /**
+     * Abre la URL especificada en el navegador predeterminado del sistema.
+     * @param string $url La URL a abrir.
+     */
+    private function openBrowser(string $url): void
+    {
+        $os = strtoupper(substr(PHP_OS, 0, 3));
+
+        if ($os === 'WIN') {
+            // Windows: usa 'start' (el 'start ""' es para manejar espacios en la URL/comando)
+            exec('start "" "' . $url . '"');
+        } elseif ($os === 'DAR') {
+            // macOS: usa 'open'
+            exec('open "' . $url . '"');
+        } else {
+            // Linux: usa 'xdg-open' y fallbacks comunes
+            exec('xdg-open "' . $url . '" || google-chrome "' . $url . '" || firefox "' . $url . '"');
+        }
     }
 }

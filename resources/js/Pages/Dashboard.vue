@@ -2,6 +2,10 @@
 import { ref, onMounted, watch, computed } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 
+defineOptions({
+    title: 'Panel Gestión Tickets'
+});
+
 // Estado de la lista de tickets: Ahora maneja el objeto de paginación
 const tickets = ref({ data: [], links: [], total: 0 });
 
