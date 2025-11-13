@@ -1,54 +1,93 @@
 
-# Prueba Técnica PixelPay - Sistema de Gestión de Tickets (PHP/Laravel)
+# Prueba Técnica PixelPay - Sistema de Gestión de Tickets (Laravel + PHP + Vue.js)
 
-Este proyecto implementa un sistema de gestión de tickets utilizando Laravel, centrado en el desarrollo de la API y el aseguramiento de calidad (QA), cumpliendo con las tareas de la prueba técnica.
+Este proyecto implementa un sistema completo de gestión de tickets utilizando **Laravel** para el backend API y **Vue.js** para el frontend. El sistema fue desarrollado en dos fases: desarrollo de la API y QA, seguido por la implementación de la interfaz gráfica y la automatización de la instalación, cumpliendo con todos los requerimientos solicitados.
 
 ## Entidades Principales
 
 El sistema permite registrar usuarios y tickets asociados a cada usuario. Las entidades principales son:
 
   * **User**: `id`, `name`, `email`.
-  * **Ticket**: `id`, `user_id`, `title`, `status`.
+  * **Ticket**: `id`, `user_id`, `title`, `description`, `status`.
 
 -----
 
-## Cómo Ejecutar el Proyecto
+## 🚀 Objetivo Final Cumplido
 
-Este proyecto requiere PHP 8.1 o superior y Laravel 12.
+El sistema está diseñado para una instalación y un despliegue totalmente automáticos.
+
+**Al correr el comando `php artisan start`, el sistema se instala completamente y muestra en el navegador la interfaz para manejar los tickets.**
+
+## 🛠 Cómo Ejecutar el Proyecto (Instalación Automática)
+
+La aplicación ahora utiliza un comando personalizado que automatiza toda la configuración, incluyendo la base de datos SQLite y el inicio del servidor.
+
+### **Requisitos**
+
+* PHP 8.1 o superior.
+* Composer.
+* Node.js (v16+) y NPM o Yarn (para las dependencias de Vue.js).
+
+### **Pasos para Instalar y Arrancar**
 
 1.  **Clonar el repositorio:**
     ```bash
-    git clone https://github.com/jurgen-yuta/pixelpay-ticket-system.git
+    git clone [https://github.com/jurgen-yuta/pixelpay-ticket-system.git](https://github.com/jurgen-yuta/pixelpay-ticket-system.git)
     cd pixelpay-ticket-system
     ```
-2.  **Instalar dependencias de PHP:**
+2.  **Instalar todas las dependencias (PHP y Frontend):**
+    Este paso es crucial para descargar Laravel, Vue.js y sus dependencias.
     ```bash
     composer install
+    npm install
+    npm run dev # Compila los assets de Vue.js para el servidor de desarrollo
     ```
-3.  **Configuración de Entorno:**
-      * Renombra `env.example` a `.env`.
-      * Crea la base de datos `pixelpay_tickets` en tu servidor MySQL.
-      * Modifica el archivo **`.env`** con tus credenciales de base de datos.
-4.  **Migraciones y Seeding (Poblar la BD):**
+3.  **Inicio Automático (Comando `php artisan start`):**
     ```bash
-    php artisan migrate:fresh --seed
+    php artisan start
     ```
-      * *Resultado:* Este comando ejecuta las migraciones y genera 5 usuarios y 50 tickets de ejemplo, esenciales para las pruebas.
+
+> 💡 **Detalles del Comando `php artisan start`:**
+> El comando realiza automáticamente la siguiente secuencia de pasos para dejar la aplicación lista:
+> 1. Crea el archivo **`.env`** si no existe, configurado con base de datos **SQLite**.
+> 2. Genera el archivo físico `database/database.sqlite`.
+> 3. Ejecuta `php artisan key:generate`.
+> 4. Ejecuta las migraciones y los *seeders* (`php artisan migrate:fresh --seed`), generando **5 usuarios y 50 tickets de prueba**.
+> 5. Finalmente, inicia el servidor de desarrollo (`php artisan serve`) para que la aplicación abra la interfaz lista para usar en `http://127.0.0.1:8000/dashboard`.
+
+-----
+
+## ✨ Funcionalidad Implementada
+
+### Interfaz Gráfica con Vue.js
+
+La interfaz está hecha con Vue.js, integrada en Laravel y es la vista inicial que se muestra al ejecutar el servidor.
+
+* **Crear Ticket:** Se puede crear un nuevo ticket con título y descripción.
+* **Listar Tickets:** Muestra todos los tickets creados en una lista.
+* **Actualizar Estado:** Permite cambiar el estado de un ticket entre: `open` → `in progress` → `closed`.
+
+### Comando Artisan Personalizado
+
+* **Comando:** `php artisan start`
+* **Función:** Automatización completa del *setup* del entorno de desarrollo.
 
 -----
 
 ## Endpoints de API Implementados
 
-El API se encuentra definida en `routes/api.php` y cumple con las tareas de desarrollo (Parte 1).
+El API es consumida por el frontend de Vue.js y cumple con los requerimientos iniciales.
 
 | Método | Ruta | Función |
 | :--- | :--- | :--- |
+| **GET** | `/api/tickets` | Retorna la lista de todos los tickets. |
 | **POST** | `/api/tickets` | Crea un nuevo ticket. |
 | **GET** | `/api/tickets/{id}` | Retorna el ticket con los datos del usuario asociado. |
+| **PUT/PATCH** | `/api/tickets/{id}` | Actualiza el estado de un ticket. |
 
 ### Requerimientos de Creación (`POST /api/tickets`):
 
-  * `title` es requerido.
+  * `title` y `description` son requeridos.
   * `user_id` debe existir.
   * `status` se asigna por defecto como `'open'`.
 
@@ -56,11 +95,11 @@ El API se encuentra definida en `routes/api.php` y cumple con las tareas de desa
 
 ## Aseguramiento de Calidad (QA)
 
-Las pruebas funcionales (Feature Tests) se encuentran en `tests/Feature/TicketTest.php` y validan el correcto funcionamiento del sistema.
+Las pruebas funcionales (Feature Tests) se encuentran en `tests/Feature/TicketTest.php` y validan el correcto funcionamiento de los endpoints de la API.
 
 ### Cómo Correr las Pruebas
 
-Para ejecutar la *suite* de pruebas de QA que valida la creación y las validaciones:
+Para ejecutar la *suite* de pruebas de QA:
 
 ```bash
 php artisan test --filter TicketTest
@@ -84,8 +123,9 @@ php artisan test --filter TicketTest
 
 El proyecto es entregado a través del repositorio Git público e incluye todos los archivos y la documentación requerida:
 
-1.  **Código Fuente Completo** (sin la carpeta `vendor`).
-2.  **Migraciones necesarias** (equivalente al archivo `.sql`).
-3.  **Este archivo `README.md`** documentando la solución.
-4.  **Colección de Postman exportada** (`PixelPay_Tickets_API.postman_collection.json`) con pruebas de los endpoints.
+*   **Código Fuente Completo** (sin la carpeta `vendor`).
+*   **Migraciones necesarias** (equivalente al archivo `.sql`).
+*   **Este archivo `README.md`** documentando la solución.
+*   **Colección de Postman exportada** (`PixelPay_Tickets_API.postman_collection.json`) con pruebas de los endpoints.
+
 
