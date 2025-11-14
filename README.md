@@ -30,14 +30,12 @@ La aplicación ahora utiliza un comando personalizado que automatiza toda la con
 
 ### **Pasos para Instalar y Arrancar**
 
-1.  **Clonar el repositorio:**
-    ```bash
-   git clone https://github.com/jurgen-yuta/pixelpay-ticket-system.git
-   ```
-   
+1. **Clonar el repositorio:**
+
    ```bash
+   git clone [https://github.com/jurgen-yuta/pixelpay-ticket-system.git](https://github.com/jurgen-yuta/pixelpay-ticket-system.git)
    cd pixelpay-ticket-system
-   ```
+   
 2.  **Instalar todas las dependencias (PHP y Frontend):**
     Este paso es crucial para descargar Laravel, Vue.js y sus dependencias.
     ```bash
