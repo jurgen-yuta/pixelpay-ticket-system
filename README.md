@@ -126,6 +126,6 @@ El proyecto es entregado a través del repositorio Git público e incluye todos 
 *   **Código Fuente Completo** (sin la carpeta `vendor`).
 *   **Migraciones necesarias** (equivalente al archivo `.sql`).
 *   **Este archivo `README.md`** documentando la solución.
-*   **Colección de Postman exportada** (`PixelPay_Tickets_API.postman_collection.json`) con pruebas de los endpoints.
+*   **Colección de Postman exportada dentro de carpeta "documentation"** (`PixelPay_Tickets_API.postman_collection.json`) con pruebas de los endpoints.
 
 
