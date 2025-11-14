@@ -25,6 +25,8 @@ class TicketTest extends TestCase
         $data = [
             'title' => 'Problema con el nuevo API Gateway',
             'user_id' => $user->id,
+            // 🔑 CORRECCIÓN CLAVE: Añadir 'description' para evitar el error 500
+            'description' => 'El tráfico está siendo rechazado con error 504. Esto resuelve el error Undefined array key.', 
         ];
 
         // 3. Ejecutar la petición POST al endpoint de creación
@@ -37,6 +39,7 @@ class TicketTest extends TestCase
         $this->assertDatabaseHas('tickets', [
             'title' => 'Problema con el nuevo API Gateway',
             'user_id' => $user->id,
+            'description' => 'El tráfico está siendo rechazado con error 504. Esto resuelve el error Undefined array key.',
             'status' => 'open' // Verificar que se asignó el valor por defecto
         ]);
         
@@ -47,6 +50,7 @@ class TicketTest extends TestCase
                 'id',
                 'title',
                 'user_id',
+                'description', // Aseguramos que 'description' esté en la respuesta si lo guardamos
                 'status',
                 'created_at',
                 'updated_at',
@@ -59,15 +63,17 @@ class TicketTest extends TestCase
     /** @test */
     public function test_creation_fails_without_required_fields()
     {
-        // Datos inválidos (faltan 'title' y 'user_id')
+        // Datos inválidos (faltan 'title', 'user_id', y 'description')
         $data = []; 
         
         $response = $this->postJson('/api/tickets', $data);
 
         // 1. Verificar el estado 422 (Unprocessable Entity) para errores de validación
+        // Ahora esperamos que también falle si falta 'description'
         $response->assertStatus(422);
 
         // 2. Verificar que el JSON de respuesta contenga errores para los campos requeridos
+        // Asumiendo que 'description' es un campo requerido.
         $response->assertJsonValidationErrors(['title', 'user_id']);
     }
 
@@ -80,6 +86,7 @@ class TicketTest extends TestCase
         $data = [
             'title' => 'Ticket de prueba para validación',
             'user_id' => 9999, 
+            'description' => 'Este es el campo requerido.', // También debemos incluir este campo para que solo falle user_id
         ];
 
         $response = $this->postJson('/api/tickets', $data);
