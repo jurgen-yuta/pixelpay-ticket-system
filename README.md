@@ -32,15 +32,17 @@ La aplicación ahora utiliza un comando personalizado que automatiza toda la con
 
 1.  **Clonar el repositorio:**
     ```bash
-    git clone [https://github.com/jurgen-yuta/pixelpay-ticket-system.git](https://github.com/jurgen-yuta/pixelpay-ticket-system.git)
-    cd pixelpay-ticket-system
-    ```
+   git clone https://github.com/jurgen-yuta/pixelpay-ticket-system.git
+   ```
+   
+   ```bash
+   cd pixelpay-ticket-system
+   ```
 2.  **Instalar todas las dependencias (PHP y Frontend):**
     Este paso es crucial para descargar Laravel, Vue.js y sus dependencias.
     ```bash
     composer install
     npm install
-    npm run dev # Compila los assets de Vue.js para el servidor de desarrollo
     ```
 3.  **Inicio Automático (Comando `php artisan start`):**
     ```bash
@@ -110,6 +112,20 @@ php artisan test --filter TicketTest
 | `test_can_create_ticket_successfully` | Positiva | Valida código `201/200` y persistencia en la BD. |
 | `test_creation_fails_without_required_fields` | Negativa | Valida errores de validación (`422`) al enviar un título vacío o falta de `user_id`. |
 | `test_creation_fails_with_non_existent_user_id` | Negativa | Valida el error controlado (`422`) si el `user_id` no existe. |
+
+### Uso de la Colección de Postman
+
+Se incluye el archivo de colección de Postman (`PixelPay_Tickets_API.postman_collection.json`) para probar manualmente y automatizadamente los endpoints de la API.
+
+**Pasos para usar la Colección:**
+
+1.  **Importar:** Importa el archivo `PixelPay_Tickets_API.postman_collection.json` en tu aplicación Postman.
+2.  **Asegurar Servidor Activo:** Asegúrate de que el servidor Laravel esté corriendo (usando `php artisan start` o `php artisan serve`).
+3.  **Variable de Entorno:** La colección utiliza la variable de entorno `{{base_url}}`. Por defecto, está configurada a `http://127.0.0.1:8000`. Si tu servidor corre en otro puerto, debes actualizar esta variable.
+4.  **Ejecutar Pruebas Automáticas:** La colección contiene pruebas automatizadas de validación dentro de las solicitudes (pestaña "Tests"):
+    * **Creación Exitosa:** Verifica código `201` y estructura de respuesta.
+    * **Validaciones:** Verifica código `422` cuando faltan campos requeridos.
+    * **Lista de Tickets:** Verifica código `200` y que la respuesta sea un array.
 
 ### Breve Descripción del Bug Encontrado y su Corrección
 
