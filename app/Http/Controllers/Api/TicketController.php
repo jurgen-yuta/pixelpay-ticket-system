@@ -15,7 +15,9 @@ class TicketController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|string|max:255', 
             'description' => 'nullable|string',
-            'user_id' => 'required|exists:users,id', 
+            // FIX: Forzamos la regla 'exists' a usar la conexión 'sqlite'
+            // Sintaxis: exists:nombre_conexion.nombre_tabla,nombre_columna
+            'user_id' => 'required|exists:sqlite.users,id', 
         ]);
 
         // 2. Creación del Ticket (usando el Enum)

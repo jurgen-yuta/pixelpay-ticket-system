@@ -62,8 +62,10 @@ class AppStartCommand extends Command
         $this->info("Ejecutando php artisan key:generate...");
         Artisan::call('key:generate', [], $this->output);
         
-        $this->info("Ejecutando php artisan migrate --seed...");
-        Artisan::call('migrate', ['--seed' => true, '--force' => true], $this->output);
+        // CORRECCIÓN CLAVE: Usar migrate:fresh para borrar y recrear la base de datos
+        // y asegurar que el schema esté siempre sincronizado con sus migraciones.
+        $this->info("Ejecutando php artisan migrate:fresh --seed...");
+        Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true], $this->output);
 
         // 4. Compilar los assets de Vue (npm run build) antes de iniciar el servidor
         $this->info("Compilando assets de Vue (npm run build)...");
