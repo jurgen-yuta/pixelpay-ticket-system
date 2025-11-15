@@ -33,7 +33,7 @@ La aplicación ahora utiliza un comando personalizado que automatiza toda la con
 1. **Clonar el repositorio:**
 
    ```bash
-   git clone [https://github.com/jurgen-yuta/pixelpay-ticket-system.git](https://github.com/jurgen-yuta/pixelpay-ticket-system.git)
+   git clone https://github.com/jurgen-yuta/pixelpay-ticket-system.git
    cd pixelpay-ticket-system
    
 2.  **Instalar todas las dependencias (PHP y Frontend):**
