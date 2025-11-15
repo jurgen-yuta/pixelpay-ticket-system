@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue';
 import { useForm } from '@inertiajs/vue3';
+import { ClockIcon } from '@heroicons/vue/24/solid'; // Para 'En Progreso'
+import { CheckCircleIcon } from '@heroicons/vue/24/solid'; // Para 'Cerrado'
 
 defineOptions({
     title: 'Panel Gestión Tickets'
@@ -220,6 +222,36 @@ const submitTicket = async () => {
     }
 };
 
+const nextStepIcon = (status) => {
+    const normalizedStatus = status ? status.toLowerCase().replace(/[\s_]/g, '') : '';
+    
+    if (normalizedStatus === 'open') {
+        // Siguiente estado: 'En Progreso' (Icono de reloj, color amarillo/progreso)
+        return {
+            text: 'En Progreso', 
+            icon: ClockIcon,
+            colorClass: 'text-yellow-600 hover:text-yellow-800', // Clase de color amarillo
+            ariaLabel: 'Avanzar a En Progreso'
+        };
+    } else if (normalizedStatus === 'inprogress') {
+        // Siguiente estado: 'Cerrado' (Icono de check, color gris/cerrado)
+        return {
+            text: 'Cerrado',
+            icon: CheckCircleIcon,
+            colorClass: 'text-gray-600 hover:text-gray-800', // Clase de color gris
+            ariaLabel: 'Avanzar a Cerrado'
+        };
+    }
+    
+    // Devuelve valores nulos o por defecto
+    return {
+        text: '',
+        icon: null,
+        colorClass: 'text-indigo-600 hover:text-indigo-800', // Color por defecto (Indigo)
+        ariaLabel: ''
+    };
+};
+
 // Actualización de Estado
 const updateStatus = async (ticket) => {
     // LLamada al endpoint PUT /api/tickets/{id}/status
@@ -437,15 +469,27 @@ onMounted(() => {
                                 {{ ticket.user ? ticket.user.name : 'N/A' }}
                             </td>
                             <!-- Columna 5: Acción -->
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                 <button
-                                    v-if="ticket.status !== 'closed'"
+                                    v-if="ticket.status.toLowerCase() !== 'closed'"
                                     @click="updateStatus(ticket)"
-                                    class="text-indigo-600 hover:text-indigo-800 text-sm p-2 border rounded-md shadow-sm transition duration-150 ease-in-out bg-white hover:bg-indigo-50"
+                                    :aria-label="nextStepIcon(ticket.status).ariaLabel"
+                                    :class="[
+                                        'inline-flex items-center justify-center p-3 border rounded-md shadow-sm transition duration-150 ease-in-out bg-white hover:bg-indigo-50',
+                                        nextStepIcon(ticket.status).colorClass 
+                                    ]"
                                 >
-                                    Avanzar a {{ ticket.status === 'open' ? 'En Progreso' : 'Cerrado' }}
+                                    <component 
+                                        :is="nextStepIcon(ticket.status).icon" 
+                                        class="w-6 h-6 mr-1.5" 
+                                        aria-hidden="true"
+                                    />
+                                    <span class="text-sm font-semibold">
+                                        {{ nextStepIcon(ticket.status).text }}
+                                    </span>
                                 </button>
-                                <span v-else class="text-gray-500 text-sm">Completado</span>
+                                
+                                <span v-else class="text-gray-500 text-sm block text-center">Completado</span>
                             </td>
                         </tr>
                         <tr v-if="tickets.data.length === 0">
@@ -484,11 +528,22 @@ onMounted(() => {
 
                     <div class="mt-3">
                         <button
-                            v-if="ticket.status !== 'closed'"
+                            v-if="ticket.status.toLowerCase() !== 'closed'"
                             @click="updateStatus(ticket)"
-                            class="w-full text-indigo-600 hover:text-indigo-800 text-sm p-2 border rounded-md shadow-sm transition duration-150 ease-in-out bg-white hover:bg-indigo-50"
+                            :aria-label="nextStepIcon(ticket.status).ariaLabel"
+                            :class="[
+                                'w-full inline-flex items-center justify-center p-3 border rounded-md shadow-sm transition duration-150 ease-in-out bg-white hover:bg-indigo-50',
+                                nextStepIcon(ticket.status).colorClass 
+                            ]"
                         >
-                            Avanzar a {{ ticket.status === 'open' ? 'En Progreso' : 'Cerrado' }}
+                            <component 
+                                :is="nextStepIcon(ticket.status).icon" 
+                                class="w-6 h-6 mr-1.5" 
+                                aria-hidden="true"
+                            />
+                            <span class="text-sm font-semibold">
+                                {{ nextStepIcon(ticket.status).text }}
+                            </span>
                         </button>
                         <span v-else class="text-gray-500 text-sm block text-center">Completado</span>
                     </div>
