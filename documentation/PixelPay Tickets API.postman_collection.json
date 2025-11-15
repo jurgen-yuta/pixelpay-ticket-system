@@ -37,7 +37,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"title\": \"Necesito ayuda con la configuración de la nueva API\",\r\n    \"user_id\": 1 \r\n}",
+					"raw": "{\r\n    \"title\": \"Necesito ayuda con la configuración de la nueva API\",\r\n    \"description\": \"El endpoint de verificación de tickets devuelve un error 500, probando la corrección del campo faltante.\",\r\n    \"user_id\": 1\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
